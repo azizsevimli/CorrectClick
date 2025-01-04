@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,26 +12,28 @@ public class GameManager : MonoBehaviour
     public string[] objectNames;
     
     private int score = 0;
+    private int defaultTime = MenuManager.time;
     private string currentTarget;
 
     void Start()
     {
         ChooseRandomTarget();
+        timeText.text = defaultTime.ToString();
         InvokeRepeating("TimeControl", 0f, 1f);
     }
 
     void TimeControl()
     {
-        int time = int.Parse(timeText.text);
+        int activeTime = int.Parse(timeText.text);
 
-        if (time > 0)
+        if (activeTime > 0)
         {
-            time--;
-            timeText.text = time.ToString();
+            activeTime--;
+            timeText.text = activeTime.ToString();
         }
-        else if (time == 0)
+        else if (activeTime == 0)
         {
-            timeText.text = "5";
+            timeText.text = defaultTime.ToString();
             score = 0;
             UpdateScoreText();
             ChooseRandomTarget();
@@ -54,10 +56,11 @@ public class GameManager : MonoBehaviour
 
     public void CheckObject(string objectName)
     {
+        timeText.text = defaultTime.ToString();
+
         if (objectName == currentTarget)
         {
-            score++;
-            timeText.text = "5";
+            score += MenuManager.point;
             UpdateScoreText();
         }
         else
